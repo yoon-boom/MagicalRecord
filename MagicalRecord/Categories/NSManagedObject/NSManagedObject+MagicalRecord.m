@@ -115,8 +115,14 @@ static NSUInteger kMagicalRecordDefaultBatchSize = 20;
 
 + (NSEntityDescription *) MR_entityDescriptionInContext:(NSManagedObjectContext *)context
 {
-    NSString *entityName = [self MR_entityName];
-    return [NSEntityDescription entityForName:entityName inManagedObjectContext:context];
+    NSString *entityName = NSStringFromClass(self);
+    NSEntityDescription *entity = [NSEntityDescription entityForName:entityName inManagedObjectContext:context];
+    if(!entity){
+        entityName = NSStringFromClass([self superclass]);
+        entity = [NSEntityDescription entityForName:entityName inManagedObjectContext:context];
+    }
+    
+    return entity;
 }
 
 + (NSArray *) MR_propertiesNamed:(NSArray *)properties
